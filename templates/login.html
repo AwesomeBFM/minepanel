@@ -1,0 +1,37 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Minepanel</title>
+    <link rel="stylesheet" href="/styles/login.css">
+    <link rel="stylesheet" href="/styles/global.css">
+</head>
+
+<body>
+    <form action="/login" method="POST">
+        <span>Login</span>
+
+        <label for="username">
+            Username
+            <br>
+            <input type="text" id="username" placeholder="Enter your username..." required>
+            {{if .BadField}}
+                <p class="error">⚠️ Incorrect username or password</p>
+            {{end}}
+        </label>
+        
+        <label for="password">
+            Password
+            <br>
+            <input type="password" id="password" placeholder="Enter your password..." required>
+            {{if .BadField}}
+                <p class="error">⚠️ Incorrect username or password</p>
+            {{end}}
+        </label>
+
+        <button type="submit">Login</button>
+    </form>
+</body>
+
+</html>

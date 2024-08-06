@@ -1,0 +1,13 @@
+:root {
+    --main-bg: #fafaf9;
+    --darkened-bg: #e5e5e5;
+    --brand: #3b82f6;
+    --brand-darkened: #2563eb;
+    --error: #ef4444;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
