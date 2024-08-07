@@ -1,13 +1,15 @@
 package router
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+)
 
 func (r *Router) RegisterAuthRoutes() {
-	r.app.Post("/login")
+	r.app.Post("/login", r.handleLogin)
 }
 
 // POST /login
-func (r *Router) handlePostLogin(c *fiber.Ctx) error {
+func (r *Router) handleLogin(c *fiber.Ctx) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
@@ -38,6 +40,26 @@ func (r *Router) handlePostLogin(c *fiber.Ctx) error {
 	}
 
 	// Create a session
+	session, secret, err := r.ath.NewSession(user, "", c.IP())
+	if err != nil {
+		return c.SendFile("./templates/500.html")
+	}
+
+	// Persist the session
+	err = r.db.PersistSession(session)
+	if err != nil || session.Id == 0 {
+		return c.SendFile("./templates/500.html")
+	}
+
+	token := r.ath.EncodeSession(session.Id, secret)
+	c.Cookie(&fiber.Cookie{
+		Name:     "session_token",
+		Value:    token,
+		Expires:  session.ExpiresAt,
+		HTTPOnly: true,
+		Secure:   true, // Ensure this is only sent over HTTPS
+		SameSite: "Strict",
+	})
 
 	return c.Redirect("/")
 }

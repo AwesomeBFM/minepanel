@@ -3,7 +3,7 @@ package auth
 import "time"
 
 type User struct {
-	Id             int64
+	Id             int
 	Username       string
 	HashedPassword string
 	CreatedAt      time.Time
@@ -11,9 +11,9 @@ type User struct {
 }
 
 type Session struct {
-	Id          int64
-	UserId      int64
-	HashedToken string
+	Id          int
+	UserId      int
+	HashedSecret string
 	UserAgent   string
 	IpAddress   string
 	CreatedAt   time.Time

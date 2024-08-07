@@ -62,30 +62,6 @@ func (a *Auth) PasswordsMatch(password string, hashedPassword string) (bool, err
 	return false, nil
 }
 
-func (a *Auth) CreateSession(
-	user *User,
-	userAgent string,
-	ipAddress string,
-) (session *Session, err error) {
-	currentTime := time.Now()
-	session.UserId = user.Id
-	session.UserAgent = userAgent
-	session.IpAddress = ipAddress
-	session.CreatedAt = currentTime
-	session.ExpiresAt = currentTime.Add(a.tokenDuration)
-
-	// Generate Token
-	token, err := generateSessionToken(16)
-	if err != nil {
-		return nil, err
-	}
-
-
-	
-
-	return session, err
-}
-
 func (a *Auth) hashPassword(password string) (string, error) {
 	// Generate a cryptographically secure random salt.
 	salt, err := a.generateRandomBytes(a.params.SaltLength)
