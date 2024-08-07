@@ -7,6 +7,7 @@ import (
 
 func (r *Router) RegisterFrontendRoutes() {
 	r.app.Get("/login", r.handleGetLogin)
+	r.app.Get("/500", r.handleGet500)
 	r.app.Get("/", middleware.AuthMiddleware, r.handleGetDashboard)
 }
 
@@ -20,4 +21,8 @@ func (r *Router) handleGetLogin(c *fiber.Ctx) error {
 	return c.Render("./templates/login.html", fiber.Map{
 		"BadField": false,
 	})
+}
+
+func (r *Router) handleGet500(c *fiber.Ctx) error {
+	return c.SendFile("./templates/500.html")
 }

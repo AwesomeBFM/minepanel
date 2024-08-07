@@ -1,19 +1,21 @@
 package auth
 
-type Role struct {
-	ID          int64
-	Description string
-}
-
-var (
-	RoleViewChats = &Role{
-		ID: 1,
-		Description: "Allows user to view server chats",
-	}
-)
+import "time"
 
 type User struct {
-	Id int64 
-	Username string
+	Id             int64
+	Username       string
+	HashedPassword string
+	CreatedAt      time.Time
+	LastLogin      time.Time
 }
 
+type Session struct {
+	Id          int64
+	UserId      int64
+	HashedToken string
+	UserAgent   string
+	IpAddress   string
+	CreatedAt   time.Time
+	ExpiresAt   time.Time
+}
