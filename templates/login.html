@@ -9,31 +9,19 @@
 </head>
 
 <body>
-    <form action="/login" method="POST">
-        <span>Login</span>
+<div class="container">
+    <div class="login form">
+        <header>Login</header>
+        <form action="/login" method="POST">
 
-        <label for="username">
-            Username
-            <br>
-            <input name="username" type="text" id="username" placeholder="Enter your username..." required>
-            {{if .BadField}}
-                <p class="error">⚠️ Incorrect username or password</p>
-            {{end}}
-        </label>
+            <input name="username" type="text" class="error" placeholder="Enter your username..." required>
 
-
-
-        <label for="password">
-            Password
-            <br>
             <input name="password" type="password" id="password" placeholder="Enter your password..." required>
-            {{if .BadField}}
-                <p class="error">⚠️ Incorrect username or password</p>
-            {{end}}
-        </label>
 
-        <button type="submit">Login</button>
-    </form>
+            <input type="submit" class="button" value="Login">
+        </form>
+    </div>
+</div>
 </body>
 
 </html>
