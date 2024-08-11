@@ -15,16 +15,18 @@
         <label for="username">
             Username
             <br>
-            <input type="text" id="username" placeholder="Enter your username..." required>
+            <input name="username" type="text" id="username" placeholder="Enter your username..." required>
             {{if .BadField}}
                 <p class="error">⚠️ Incorrect username or password</p>
             {{end}}
         </label>
-        
+
+
+
         <label for="password">
             Password
             <br>
-            <input type="password" id="password" placeholder="Enter your password..." required>
+            <input name="password" type="password" id="password" placeholder="Enter your password..." required>
             {{if .BadField}}
                 <p class="error">⚠️ Incorrect username or password</p>
             {{end}}

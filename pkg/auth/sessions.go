@@ -4,12 +4,11 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/binary"
+	"math/big"
 	"time"
-
-	"golang.org/x/crypto/argon2"
 )
 
-func (a *Auth) EncodeSession(id int, secret []byte) string {
+func (a *Auth) EncodeSession(id int, secret string) string {
 	idBytes := make([]byte, 4)
 	binary.BigEndian.PutUint32(idBytes, uint32(id))
 
@@ -36,8 +35,9 @@ func (a *Auth) NewSession(
 	user *User,
 	userAgent string,
 	ipAddress string,
-) (session *Session, secret []byte, err error) {
+) (*Session, string, error) {
 	// Populate known data
+	var session Session
 	session.UserId = user.Id
 	session.UserAgent = userAgent
 	session.IpAddress = ipAddress
@@ -48,42 +48,31 @@ func (a *Auth) NewSession(
 	session.ExpiresAt = currentTime.Add(a.tokenDuration)
 
 	// Generate secret
-	secret, err = generateSessionSecret()
+	secret, err := generateSessionSecret()
 	if err != nil {
-		return nil, nil, err
+		return nil, "", err
 	}
 
 	// Hash secret
-	hashedSecret, err := a.hashSecret(secret)
+	hashedSecret, err := a.HashPassword(secret)
 	if err != nil {
-		return nil, nil, err
+		return nil, "", err
 	}
-	session.HashedSecret = string(hashedSecret)
+	session.HashedSecret = hashedSecret
 
-	return
+	return &session, secret, err
 }
 
-func (a *Auth) hashSecret(secret []byte) ([]byte, error) {
-	// Generate salt
-	salt, err := a.generateRandomBytes(a.params.SaltLength)
-	if err != nil {
-		return nil, err
-	}
-
-	// Generate hash with Argon2id
-	hash := argon2.IDKey(
-		secret,
-		salt,
-		a.params.Iterations,
-		a.params.Memory,
-		a.params.Parallelism,
-		a.params.KeyLength,
-	)
-	return hash, nil
-}
-
-func generateSessionSecret() ([]byte, error) {
+func generateSessionSecret() (string, error) {
+	characters := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@#$%^&*()-_=+[{]}|;:,<.>/?"
 	b := make([]byte, 16)
-	_, err := rand.Read(b)
-	return b, err
+	for i := 0; i < 16; i++ {
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(characters))))
+		if err != nil {
+			return "", err
+		}
+		b[i] = characters[num.Int64()]
+	}
+
+	return string(b), nil
 }

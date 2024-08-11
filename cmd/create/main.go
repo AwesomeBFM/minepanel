@@ -3,21 +3,36 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/awesomebfm/minepanel/pkg/auth"
+	"github.com/awesomebfm/minepanel/pkg/database"
 	"log"
 	"os"
-	"syscall"
 	"strings"
+	"syscall"
+	"time"
 
 	"golang.org/x/term"
 )
 
 func main() {
 	// Connect to the database
-	// db, err := database.NewDatabase(os.Getenv("POSTGRES_URL"))
-	// if err != nil {
-	// 	log.Fatalf("error connecting to database: %q", err.Error())
-	// }
-	// defer db.Close()
+	db, err := database.NewDatabase(os.Getenv("POSTGRES_URL"))
+	if err != nil {
+		log.Fatalf("error connecting to database: %q", err.Error())
+	}
+	defer db.Close()
+
+	// Create an auth object
+	ath := auth.NewAuth(
+		&auth.Params{
+			Memory:      64 * 1024,
+			Iterations:  3,
+			Parallelism: 2,
+			SaltLength:  16,
+			KeyLength:   32,
+		},
+		90*24*time.Hour,
+	)
 
 	// Create the user
 	fmt.Println(`[!] This tool will create the login credentials for a root superuser 
@@ -59,6 +74,26 @@ func main() {
 		return
 	}
 
-	// TODO: Actually create the user
+	// Create user
+	var user auth.User
+	user.Username = username
+	user.CreatedAt = time.Now()
+	user.LastLogin = time.Now()
 
+	// Hash password
+	hashedPassword, err := ath.HashPassword(password)
+	if err != nil {
+		log.Fatalf("error hashing password: %q", err.Error())
+		return
+	}
+	user.HashedPassword = hashedPassword
+
+	// Store user
+	err = db.PersistUser(&user)
+	if err != nil {
+		log.Fatalf("error storing user: %q", err.Error())
+		return
+	}
+
+	fmt.Println("SUCCESS! A user now exists with these credentials")
 }

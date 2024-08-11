@@ -12,8 +12,10 @@ func (r *Router) RegisterAuthRoutes() {
 func (r *Router) handleLogin(c *fiber.Ctx) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
+	userAgent := c.Get("User-Agent")
+	ip := c.IP()
 
-	// Incase they think they are sneaky
+	// In case they think they are sneaky
 	if username == "" || password == "" {
 		return c.Render("./templates/login.html", fiber.Map{
 			"BadField": true,
@@ -29,7 +31,7 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 	}
 
 	// Validate password
-	passwordsMatch, err := r.ath.PasswordsMatch(password, user.HashedPassword)
+	passwordsMatch, err := r.ath.HashMatches(password, user.HashedPassword)
 	if err != nil {
 		return c.SendFile("./templates/500.html")
 	}
@@ -40,7 +42,7 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 	}
 
 	// Create a session
-	session, secret, err := r.ath.NewSession(user, "", c.IP())
+	session, secret, err := r.ath.NewSession(user, userAgent, ip)
 	if err != nil {
 		return c.SendFile("./templates/500.html")
 	}
@@ -57,7 +59,7 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 		Value:    token,
 		Expires:  session.ExpiresAt,
 		HTTPOnly: true,
-		Secure:   true, // Ensure this is only sent over HTTPS
+		Secure:   true,
 		SameSite: "Strict",
 	})
 

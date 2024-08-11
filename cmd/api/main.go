@@ -13,9 +13,9 @@ import (
 
 func main() {
 	// Database
-	db, err := database.NewDatabase(os.Getenv("DATABASE_URL"))
+	db, err := database.NewDatabase(os.Getenv("POSTGRES_URL"))
 	if err != nil {
-		log.Fatalf("error connection to database: %q", err.Error())
+		log.Fatalf("error connecting to database: %q", err.Error())
 	}
 	defer db.Close()
 
@@ -32,7 +32,7 @@ func main() {
 	)
 
 	// Router
-	r := router.NewRouter(":8080", fiber.Config{}, db, ath)
+	r := router.NewRouter(os.Getenv("LISTEN_ADDRESS"), fiber.Config{}, db, ath)
 
 	err = r.Listen()
 	if err != nil {

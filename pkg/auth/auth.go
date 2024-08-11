@@ -21,22 +21,18 @@ type Params struct {
 }
 
 type Auth struct {
-	params *Params
+	params        *Params
 	tokenDuration time.Duration
 }
 
 func NewAuth(params *Params, tokenDuration time.Duration) *Auth {
 	return &Auth{
-		params: params,
+		params:        params,
 		tokenDuration: tokenDuration,
 	}
 }
 
-func (a *Auth) IsTokenValid(sessionToken string) (bool, error) {
-	return false, nil
-}
-
-func (a *Auth) PasswordsMatch(password string, hashedPassword string) (bool, error) {
+func (a *Auth) HashMatches(password string, hashedPassword string) (bool, error) {
 	// Extract the parameters, salt and derived key from the encoded password
 	// hash.
 	p, salt, hash, err := a.decodeHash(hashedPassword)
@@ -62,7 +58,7 @@ func (a *Auth) PasswordsMatch(password string, hashedPassword string) (bool, err
 	return false, nil
 }
 
-func (a *Auth) hashPassword(password string) (string, error) {
+func (a *Auth) HashPassword(password string) (string, error) {
 	// Generate a cryptographically secure random salt.
 	salt, err := a.generateRandomBytes(a.params.SaltLength)
 	if err != nil {
@@ -80,7 +76,10 @@ func (a *Auth) hashPassword(password string) (string, error) {
 		a.params.Parallelism,
 		a.params.KeyLength)
 
-	return string(hash), nil
+	b64Salt := base64.RawStdEncoding.EncodeToString(salt)
+	b64Hash := base64.RawStdEncoding.EncodeToString(hash)
+
+	return fmt.Sprintf("$argon2id$v=%d$m=%d,t=%d,p=%d$%s$%s", argon2.Version, a.params.Memory, a.params.Iterations, a.params.Parallelism, b64Salt, b64Hash), nil
 }
 
 func (a *Auth) generateRandomBytes(n uint32) ([]byte, error) {
@@ -127,15 +126,4 @@ func (a *Auth) decodeHash(encodedHash string) (p *Params, salt, hash []byte, err
 	p.KeyLength = uint32(len(hash))
 
 	return p, salt, hash, nil
-}
-
-func generateSessionToken(n uint32) (string, error) {
-	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-
-	token := base64.URLEncoding.EncodeToString(b)
-    return token, nil
 }

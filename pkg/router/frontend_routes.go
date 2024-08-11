@@ -1,14 +1,13 @@
 package router
 
 import (
-	"github.com/awesomebfm/minepanel/pkg/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 
 func (r *Router) RegisterFrontendRoutes() {
 	r.app.Get("/login", r.handleGetLogin)
 	r.app.Get("/500", r.handleGet500)
-	r.app.Get("/", middleware.AuthMiddleware, r.handleGetDashboard)
+	r.app.Get("/", r.AuthMiddleware, r.handleGetDashboard)
 }
 
 // GET / (Dashboard, 303 if !auth)

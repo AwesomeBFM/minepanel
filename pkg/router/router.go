@@ -34,6 +34,7 @@ func (r *Router) Listen() error {
 	r.app.Static("/", "./public")
 
 	r.RegisterFrontendRoutes()
+	r.RegisterAuthRoutes()
 
 	return r.app.Listen(r.listenAddr)
 }
