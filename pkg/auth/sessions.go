@@ -23,8 +23,8 @@ func DecodeSession(token string) (int, string, error) {
 		return 0, "", err
 	}
 
-	id := int(binary.BigEndian.Uint32(data[:8]))
-	secret := string(data[8:])
+	id := int(binary.BigEndian.Uint32(data[:4]))
+	secret := string(data[4:])
 
 	return id, secret, nil
 }
