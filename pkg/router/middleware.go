@@ -40,7 +40,7 @@ func (r *Router) AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	currentTime := time.Now()
-	if session.CreatedAt.After(currentTime) || session.ExpiresAt.Before(time.Now()) {
+	if session.CreatedAt.After(currentTime) || session.ExpiresAt.Before(currentTime) {
 		c.ClearCookie("session_token")
 		return c.Redirect("/login")
 	}
