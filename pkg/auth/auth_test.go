@@ -18,12 +18,12 @@ func TestAuth_PasswordHashing(t *testing.T) {
 		90*24*time.Hour,
 	)
 
-	hashed, err := ath.HashPassword("Trump2024")
+	hashed, err := ath.HashPassword("7H,c*8o9gL)=")
 	if err != nil {
 		t.Errorf("Did not expect error while hashing password but got: %v", err)
 	}
 
-	result, err := ath.HashMatches("Trump2024", hashed)
+	result, err := ath.HashMatches("7H,c*8o9gL)=", hashed)
 	if err != nil {
 		t.Errorf("Did not expect error while comparing hash but got: %v", err)
 	}
