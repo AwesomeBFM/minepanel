@@ -47,3 +47,13 @@ func (r *Router) AuthMiddleware(c *fiber.Ctx) error {
 
 	return c.Next()
 }
+
+func (r *Router) ReverseAuthMiddleware(c *fiber.Ctx) error {
+	sessionToken := c.Cookies("session_token")
+
+	if sessionToken != "" {
+		return c.Redirect("/")
+	}
+
+	return c.Next()
+}

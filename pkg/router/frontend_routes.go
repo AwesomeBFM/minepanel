@@ -5,7 +5,7 @@ import (
 )
 
 func (r *Router) RegisterFrontendRoutes() {
-	r.app.Get("/login", r.handleGetLogin)
+	r.app.Get("/login", r.ReverseAuthMiddleware, r.handleGetLogin)
 	r.app.Get("/500", r.handleGet500)
 	r.app.Get("/", r.AuthMiddleware, r.handleGetDashboard)
 }
