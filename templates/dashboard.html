@@ -5,8 +5,23 @@
     <title>Dashboard | Minepanel</title>
     <link rel="stylesheet" href="/styles/dashboard.css">
     <link rel="stylesheet" href="/styles/global.css">
+    <link rel="stylesheet" href="/styles/header.css">
 </head>
 <body>
-    
+<header>
+    <span class="brand">Minepanel</span>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/chats">Chats</a>
+        <a href="/reports">Reports</a>
+        <a href="/servers">Servers</a>
+        <a href="/users">Users</a>
+    </nav>
+
+    <a href="/account" class="account">
+        <img src="/icons/user.svg" alt="Profile Picture">
+        <span>{{ .Username }}</span>
+    </a>
+</header>
 </body>
 </html>

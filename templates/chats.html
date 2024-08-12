@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats | Minepanel</title>
+
+
+    <script src="/scripts/htmx.min.js"></script>
+    <link rel="stylesheet" href="/styles/chats.css">
+    <link rel="stylesheet" href="/styles/global.css">
+    <link rel="stylesheet" href="/styles/header.css">
+</head>
+<body>
+<header>
+    <span class="brand">Minepanel</span>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/chats" class="active">Chats</a>
+        <a href="/reports">Reports</a>
+        <a href="/servers">Servers</a>
+        <a href="/users">Users</a>
+    </nav>
+
+    <a href="/account" class="account">
+        <img src="/icons/user.svg" alt="Profile Icon">
+        <span>{{ .Username }}</span>
+    </a>
+</header>
+
+<div class="top-row">
+    <!--<form action="/chats" method="get" class="search">
+        <input name="query" type="search" placeholder="Search chats...">
+        <button type="submit">
+            <img src="../public/icons/search-white.svg" alt="Search">
+        </button>
+    </form>-->
+    <span class="title">Chats</span>
+
+    <form action="/chats" method="get" class="filter">
+        <select name="sortby" id="sortby" onchange="this.form.submit()">
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+            <option value="most">Most Player</option>
+            <option value="least">Least Players</option>
+        </select>
+    </form>
+</div>
+
+<div class="chats">
+    {{ range .Chats }}
+    <div class="chat" hx-ext="ws" ws-connect="/chats/{{ .Id }}">
+        <span class="chat-title">{{ .Name }}</span>
+        <span>
+            <a href="/player/19929">AwesomeBFM</a>:
+            Cheese is fire as heck
+        </span>
+        <span>
+            <a href="/player/19929">AwesomeBFM</a>:
+            Cheese is fire as heck
+        </span>
+    </div>
+    {{ else }}
+        <span>ERROR: No chats found</span>
+    {{ end }}
+</div>
+
+</body>
+</html>
