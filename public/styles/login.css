@@ -9,11 +9,17 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 430px;
+    max-width: 80%;
     width: 100%;
     background: #fff;
     border-radius: 8px;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+@media (min-width: 640px) {
+    .container {
+        max-width: 430px;
+    }
 }
 
 .container .form{
@@ -26,8 +32,6 @@ body {
     text-align: center;
     margin-bottom: 1.5rem;
 }
-
-
 
 form input{
     height: 60px;
