@@ -34,7 +34,6 @@ form input{
     width: 100%;
     padding: 0 15px;
     font-size: 17px;
-    margin-bottom: 1.3rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     outline: none;
@@ -44,11 +43,24 @@ form input{
     color: #fff;
     background: var(--brand);
     font-size: 1.2rem;
+    margin-top: 1.5rem;
     font-weight: 500;
     letter-spacing: 1px;
     cursor: pointer;
 }
 .form input.button:hover{
     background: var(--brand-darkened);
+}
+
+#password {
+    margin-top: 1.3rem;
+}
+
+.error {
+    border: 2px solid var(--error);
+}
+
+.error-message {
+    color: var(--error);
 }
 

@@ -18,7 +18,8 @@ func (r *Router) handleGetDashboard(c *fiber.Ctx) error {
 // Get /login
 func (r *Router) handleGetLogin(c *fiber.Ctx) error {
 	return c.Render("./templates/login.html", fiber.Map{
-		"BadField": false,
+		"UsernameError": "",
+		"PasswordError": "",
 	})
 }
 

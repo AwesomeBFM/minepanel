@@ -14,9 +14,15 @@
         <header>Login</header>
         <form action="/login" method="POST">
 
-            <input name="username" type="text" class="error" placeholder="Enter your username..." required>
+            <input name="username" type="text" class="{{ if .UsernameError }}error{{ end }}" placeholder="Enter your username..." required>
+            {{ if .UsernameError }}
+                <span class="error-message">{{ .UsernameError }}</span>
+            {{ end }}
 
-            <input name="password" type="password" id="password" placeholder="Enter your password..." required>
+            <input name="password" type="password" id="password" class="{{ if .PasswordError }}error{{ end }}" placeholder="Enter your password..." required>
+            {{ if .PasswordError }}
+            <span class="error-message">{{ .PasswordError }}</span>
+            {{ end }}
 
             <input type="submit" class="button" value="Login">
         </form>

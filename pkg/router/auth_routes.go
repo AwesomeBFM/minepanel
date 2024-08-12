@@ -16,9 +16,20 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 	ip := c.IP()
 
 	// In case they think they are sneaky
-	if username == "" || password == "" {
+	if username == "" && password == "" {
 		return c.Render("./templates/login.html", fiber.Map{
-			"BadField": true,
+			"UsernameError": "Invalid username or password",
+			"PasswordError": "Invalid username or password",
+		})
+	} else if username == "" {
+		return c.Render("./templates/login.html", fiber.Map{
+			"UsernameError": "Invalid username or password",
+			"PasswordError": "",
+		})
+	} else if password == "" {
+		return c.Render("./templates/login.html", fiber.Map{
+			"UsernameError": "",
+			"PasswordError": "Invalid username or password",
 		})
 	}
 
@@ -26,7 +37,8 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 	user, err := r.db.FindUserByUsername(username)
 	if err != nil {
 		return c.Render("./templates/login.html", fiber.Map{
-			"BadField": true,
+			"UsernameError": "Invalid username or password",
+			"PasswordError": "Invalid username or password",
 		})
 	}
 
@@ -37,7 +49,8 @@ func (r *Router) handleLogin(c *fiber.Ctx) error {
 	}
 	if !passwordsMatch {
 		return c.Render("./templates/login.html", fiber.Map{
-			"BadField": true,
+			"UsernameError": "Invalid username or password",
+			"PasswordError": "Invalid username or password",
 		})
 	}
 
